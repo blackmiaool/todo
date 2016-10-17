@@ -12,31 +12,74 @@ import User from './User';
 import UserLogin from './UserLogin';
 import UserClaim from './UserClaim';
 import UserProfile from './UserProfile';
+import Todo from './Todo';
 
-User.hasMany(UserLogin, {
+User.hasMany(Todo, {
   foreignKey: 'userId',
-  as: 'logins',
+  as: 'todos',
   onUpdate: 'cascade',
   onDelete: 'cascade',
 });
 
-User.hasMany(UserClaim, {
-  foreignKey: 'userId',
-  as: 'claims',
-  onUpdate: 'cascade',
-  onDelete: 'cascade',
-});
+//User.hasMany(UserLogin, {
+//  foreignKey: 'userId',
+//  as: 'logins',
+//  onUpdate: 'cascade',
+//  onDelete: 'cascade',
+//});
+//
+//User.hasMany(UserClaim, {
+//  foreignKey: 'userId',
+//  as: 'claims',
+//  onUpdate: 'cascade',
+//  onDelete: 'cascade',
+//});
+//
+//User.hasOne(UserProfile, {
+//  foreignKey: 'userId',
+//  as: 'profile',
+//  onUpdate: 'cascade',
+//  onDelete: 'cascade',
+//});
+//var fs        = require("fs");
+//var path      = require("path");
+//var Sequelize = require("sequelize");
+//var env       = process.env.NODE_ENV || "development";
+//var config    = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
+//if (process.env.DATABASE_URL) {
+//  var sequelize = new Sequelize(process.env.DATABASE_URL);
+//} else {
+//  var sequelize = new Sequelize(config.database, config.username, config.password, config);
+//}
+//var db        = {};
+//
+//fs
+//  .readdirSync(__dirname)
+//  .filter(function(file) {
+//    return (file.indexOf(".") !== 0) && (file !== "index.js");
+//  })
+//  .forEach(function(file) {
+//    var model = sequelize.import(path.join(__dirname, file));
+//    db[model.name] = model;
+//  });
+//
+//Object.keys(db).forEach(function(modelName) {
+//  if ("associate" in db[modelName]) {
+//    db[modelName].associate(db);
+//  }
+//});
+//
+//db.sequelize = sequelize;
+//db.Sequelize = Sequelize;
+//
+//module.exports = db;
 
-User.hasOne(UserProfile, {
-  foreignKey: 'userId',
-  as: 'profile',
-  onUpdate: 'cascade',
-  onDelete: 'cascade',
-});
+
+
 
 function sync(...args) {
   return sequelize.sync(...args);
 }
 
 export default { sync };
-export { User, UserLogin, UserClaim, UserProfile };
+export { User, UserLogin, UserClaim, UserProfile ,Todo};

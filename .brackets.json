@@ -1,0 +1,14 @@
+{
+    "spaceUnits": 4,
+    "language.fileExtensions": {
+        "js": "jsx"
+    },
+    "brackets-file-tree-exclude.excludeList": [
+        "/.git/",
+        "/dist",
+        "/bower_components/",
+        "/node_modules/",
+	    "/libs/",
+        "/build/"
+    ]
+}

@@ -13,26 +13,32 @@ import fetch from '../../core/fetch';
 
 export default {
 
-  path: '/',
+    path: '/',
 
-  async action() {
-    const resp = await fetch('/graphql', {
-      method: 'post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: '{news{title,link,contentSnippet}}',
-      }),
-      credentials: 'include',
-    });
-    const { data } = await resp.json();
-    if (!data || !data.news) throw new Error('Failed to load the news feed.');
-    return {
-      title: 'React Starter Kit',
-      component: <Home news={data.news} />,
-    };
-  },
+    async action() {
+        const resp = await fetch('/graphql', {
+            method: 'post',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            //      body: JSON.stringify({
+            //        query: '{news{title,link,contentSnippet}}',
+            //      }),
+            body: JSON.stringify({
+                query: '{todo{content,state,process}}',
+            }),
+            credentials: 'include',
+        });
+        const {
+            data
+        } = await resp.json();
+        if (!data || !data.todo) throw new Error('Failed to load the news feed.');
+        console.log(data);
+        return {
+            title: 'React Starter Kit',
+            component: <Home todo={data.todo} />,
+        };
+    },
 
 };

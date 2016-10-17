@@ -12,14 +12,29 @@ import Model from '../sequelize';
 
 const UserClaim = Model.define('UserClaim', {
 
-  type: {
-    type: DataType.STRING,
-  },
+    type: {
+        type: DataType.STRING,
+    },
 
-  value: {
-    type: DataType.STRING,
-  },
+    value: {
+        type: DataType.STRING,
+    },
 
 });
+
+//Model.sync().then(function () {
+//    return UserClaim.create({
+//        type: 'janedoe',
+//        value: '5234234'
+//    });
+//}).then(async(jane) => {
+//    console.log("!!!!!!");
+//    const asd = await UserClaim.findOne({
+//        where: {
+//            type: 'janedoe'
+//        }
+//    });
+//    console.log(asd)
+//});
 
 export default UserClaim;

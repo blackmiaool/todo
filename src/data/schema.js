@@ -8,23 +8,26 @@
  */
 
 import {
-  GraphQLSchema as Schema,
-  GraphQLObjectType as ObjectType,
+    GraphQLSchema as Schema,
+    GraphQLObjectType as ObjectType,
 } from 'graphql';
 
 import me from './queries/me';
 import content from './queries/content';
 import news from './queries/news';
+import todo from './queries/todo';
+import todo_add from './queries/todo';
 
 const schema = new Schema({
-  query: new ObjectType({
-    name: 'Query',
-    fields: {
-      me,
-      content,
-      news,
-    },
-  }),
+    query: new ObjectType({
+        name: 'Query',
+        fields: {
+            me,
+            content,
+            news,
+            todo,
+        },
+    }),
 });
 
 export default schema;

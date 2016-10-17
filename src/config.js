@@ -9,8 +9,8 @@
 
 /* eslint-disable max-len */
 
-export const port = process.env.PORT || 3000;
-export const host = process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
+export const port = process.env.PORT || 10002;
+export const host = process.env.WEBSITE_HOSTNAME || `blackmiaool.jios.org:${port}`;
 
 export const databaseUrl = process.env.DATABASE_URL || 'sqlite:database.sqlite';
 
@@ -29,8 +29,8 @@ export const auth = {
 
   // https://developers.facebook.com/
   facebook: {
-    id: process.env.FACEBOOK_APP_ID || '186244551745631',
-    secret: process.env.FACEBOOK_APP_SECRET || 'a970ae3240ab4b9b8aae0f9f0661c6fc',
+    id: process.env.FACEBOOK_APP_ID || '1308972699136711',
+    secret: process.env.FACEBOOK_APP_SECRET || 'c011982cb220c8f7c4261903711fc1e6',
   },
 
   // https://cloud.google.com/console/project

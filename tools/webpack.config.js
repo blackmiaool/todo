@@ -64,6 +64,7 @@ const config = {
           ],
           plugins: [
             'transform-runtime',
+              "transform-decorators-legacy",
             ...DEBUG ? [] : [
               'transform-react-remove-prop-types',
               'transform-react-constant-elements',
@@ -118,6 +119,15 @@ const config = {
         query: {
           name: DEBUG ? '[path][name].[ext]?[hash]' : '[hash].[ext]',
         },
+      },
+        {
+        test: /\.less$/,
+        loaders: [
+          'isomorphic-style-loader',
+          `css-loader?${JSON.stringify({sourceMap: DEBUG, minimize: !DEBUG })}`,
+          'postcss-loader?pack=sass',
+          'less-loader',
+        ],
       },
     ],
   },

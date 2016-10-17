@@ -13,14 +13,15 @@ import s from './Layout.css';
 import Header from '../Header';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
+import Body from '../Body';
 
-function Layout({ children }) {
+function Layout({ children,todo }) {
+    console.log(3,todo)
   return (
     <div>
       <Header />
+      <Body todo={todo}/>
       {React.Children.only(children)}
-      <Feedback />
-      <Footer />
     </div>
   );
 }
