@@ -26,7 +26,7 @@ export default {
             //        query: '{news{title,link,contentSnippet}}',
             //      }),
             body: JSON.stringify({
-                query: '{todo{content,state,process}}',
+                query: '{todo{content,state,process,id}}',
             }),
             credentials: 'include',
         });

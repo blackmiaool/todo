@@ -20,6 +20,7 @@ const TodoType = new ObjectType({
     content: { type: new NonNull(StringType) },
     state: { type: new NonNull(StringType) },
     process: { type: new NonNull(IntType) },
+    id: { type: new NonNull(IntType) },
   },
 });
 

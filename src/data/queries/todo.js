@@ -11,12 +11,34 @@ import {
     Todo
 } from '../models';
 
+async function deleteTask(id) {
+    const task = await getTask(id);
+    await task.destroy();
+}
+async function getList(user) {
+    const userInfo = await User.findOne({
+        //                    attributes: ['todo'],
+        include: [{
+            model: Todo,
+            as: 'todos'
+                    }],
+        where: {
+            id: user.id,
+        },
+    })
+    return userInfo.todos.reverse();
+}
+async function getTask(id) {
+    const task = await Todo.findById(id);
+    return task;
+}
 const todo = {
     type: new List(TodoType),
-    resolve(request) {
+    async resolve(request) {
         const {
             action,
-            content
+            content,
+            id
         } = request.request.body;
         let user = request.user;
         if (!user) {
@@ -26,43 +48,39 @@ const todo = {
         }
         if (action) {
             switch (action) {
-                case "add":
-                    Todo.create({
-                        content,
-                        state: 'pending',
-                        process: 0,
-                        userId: user.id
+            case "add":
+                await Todo.create({
+                    content,
+                    state: 'pending',
+                    process: 0,
+                    userId: user.id
+                });
+                break;
+            case "delete":
+                await deleteTask(id);
+
+                break;
+            case "top":
+                {
+                    const task = await getTask(id);                    
+                    await deleteTask(id);
+                    delete task.dataValues.id;
+                    const taskValue = task.get({
+                        plain: true
                     });
+                    delete taskValue.id;
+                    await Todo.create(taskValue);                    
                     break;
-                default:
-                    break;
+                }
+
+            default:
+                break;
             }
         }
-        console.log("request:", action, content);
-        const wait = async function() {
-           
-               let userLogin = await User.findOne({
-                //                    attributes: ['todo'],
-                include: [ {
-                        model: Todo,
-                        as: 'todos'
-                    } ],
-                where: {
-                    id: user.id,
-                },
-            });
-            console.log(userLogin.todos) 
-      
-            return userLogin.todos;
-            
-        }
-        return wait();
-        const ret = [{
-            content: "abc",
-            state: "pending",
-            process: 5,
-        }];
-        return ret;
+
+        const list = await getList(user);
+        return list;
+
 
     },
 };
