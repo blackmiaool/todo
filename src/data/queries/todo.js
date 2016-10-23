@@ -13,6 +13,9 @@ import {
 
 async function deleteTask(id) {
     const task = await getTask(id);
+    if (!task) {
+        return;
+    }
     await task.destroy();
 }
 async function getList(user) {
@@ -32,14 +35,26 @@ async function getTask(id) {
     const task = await Todo.findById(id);
     return task;
 }
+async function clear(user) {
+    const list = await getList(user);
+    list.forEach(async (li) => {
+        const v=li.get({
+            plain: true
+        });
+        if(v.state==="finished"){
+            await li.destroy();
+        }
+    });
+}
 const todo = {
     type: new List(TodoType),
     async resolve(request) {
+        const body = request.request.body;
         const {
             action,
             content,
             id
-        } = request.request.body;
+        } = body;
         let user = request.user;
         if (!user) {
             user = {
@@ -49,28 +64,58 @@ const todo = {
         if (action) {
             switch (action) {
             case "add":
-                await Todo.create({
-                    content,
-                    state: 'pending',
-                    process: 0,
-                    userId: user.id
-                });
-                break;
-            case "delete":
-                await deleteTask(id);
+                {
+                    const {
 
-                break;
+                        content,
+                    } = body;
+                    await Todo.create({
+                        content,
+                        state: 'pending',
+                        process: 0,
+                        userId: user.id
+                    });
+                    break;
+                }
+            case "delete":
+                {
+                    await deleteTask(id);
+                    break;
+                }
             case "top":
                 {
-                    const task = await getTask(id);                    
+                    const task = await getTask(id);
+                    if (!task) {
+                        break;
+                    }
                     await deleteTask(id);
                     delete task.dataValues.id;
                     const taskValue = task.get({
                         plain: true
                     });
                     delete taskValue.id;
-                    await Todo.create(taskValue);                    
+                    await Todo.create(taskValue);
                     break;
+                }
+            case "set":
+                {
+                    const {
+                        id,
+                        field,
+                        value
+                    } = body;
+                    const task = await getTask(id);
+                    if (!task) {
+                        break;
+                    }
+                    await task.update({
+                        [field]: value
+                    })
+                    break;
+                }
+            case "clear":
+                {
+                    await clear(user);
                 }
 
             default:

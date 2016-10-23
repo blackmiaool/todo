@@ -16,7 +16,6 @@ import Footer from '../Footer';
 import Body from '../Body';
 
 function Layout({ children,todo }) {
-    console.log(3,todo)
   return (
     <div>
       <Header />

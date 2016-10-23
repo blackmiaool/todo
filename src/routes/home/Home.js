@@ -13,7 +13,6 @@ import Layout from '../../components/Layout';
 import s from './Home.css';
 
 function Home({ todo }) {
-    console.log(2,todo);
   return (
     <Layout  todo={todo}>
     <div></div>

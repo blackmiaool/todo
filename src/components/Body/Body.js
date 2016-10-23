@@ -13,7 +13,7 @@ const headers = {
 const method = "post";
 
 
-const set=async (field, id)=> {
+async function set(id, field, value) {
     const send = async() => {
         const resp = await fetch('/graphql', {
             method,
@@ -22,7 +22,8 @@ const set=async (field, id)=> {
                 query: '{todo{content,process,state,id}}',
                 action: "set",
                 id,
-
+                field,
+                value
             }),
             credentials: 'include',
         });
@@ -43,8 +44,9 @@ class Body extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            message: 'Hello!',
-            todo: JSON.parse(JSON.stringify(props.todo))
+            message: '',
+            todo: JSON.parse(JSON.stringify(props.todo)),
+            filter: "avaliable"
         };
     }
 
@@ -82,7 +84,8 @@ class Body extends Component {
 
         }
     }
-    taskTop = (id) => {
+    topTask = (task) => {
+        const id = task.id;
         const send = async() => {
             const resp = await fetch('/graphql', {
                 method,
@@ -104,7 +107,8 @@ class Body extends Component {
         }
         send();
     }
-    taskDelete = (id) => {
+    deleteTask = (task) => {
+        const id = task.id;
         const send = async() => {
             const resp = await fetch('/graphql', {
                 method,
@@ -126,48 +130,126 @@ class Body extends Component {
         }
         send();
     }
-    toggleComplete = (task) => {
-        if (task.process < 100) {
-            set(task.id, "process", 100);
+    toggleActive = (task) => {
+        console.log(task)
+        let state;
+        switch (task.state) {
+        case "pending":
+            state = "active";
+            break;
+        case "active":
+            state = "pending";
+            break;
+        case "finished":
+            state = "active";
+            break;
+        }
+        set.call(this, task.id, "state", state);
+
+    }
+    finishTask = (task) => {
+        console.log(task)
+        if (task.state !== "finished") {
+            set.call(this, task.id, "state", "finished");
         }
 
     }
+    setFilter = (filter) => {
+        this.setState({
+            filter
+        });
+    }
+    filterState = (state) => {
+        console.log(state, this.state.filter)
+        if (this.state.filter === "avaliable") {
+            if (state === "finished") {
+                return false;
+            }
+        } else if (this.state.filter !== state) {
+            return false;
+        }
+
+        return true;
+    }
+    clearTask = () => {
+        const send = async() => {
+            const resp = await fetch('/graphql', {
+                method,
+                headers,
+                body: JSON.stringify({
+                    query: '{todo{content,process,state,id}}',
+                    action: "clear",                    
+                }),
+                credentials: 'include',
+            });
+            const {
+                data
+            } = await resp.json();
+            if (!data || !data.todo) throw new Error('Failed to load the news feed.');
+            this.setState({
+                todo: data.todo
+            })
+        }
+        send();
+    }
     render() {
-        console.log(arguments, this.props)
+        const listData = this.state.todo.filter((v, i) => {
+            if (!this.filterState(v.state)) {
+                return false;
+            }
+            return true;
+        });
+        const list = listData.map((v, i) => {
+            if (!this.filterState(v.state)) {
+                return;
+            }
+
+            return <li key={i} className={v.state}>
+                            <div className="view"><input className="toggle" type="checkbox" onChange={this.toggleActive.bind(this,v)} checked={v.state==="active"} title={v.state==="active"?"active":"inactive"}/>
+                            <label>{v.content} in {v.process}</label>                            
+                            <button className="top tool" onClick={this.topTask.bind(this,v)} title="top"></button>
+                            {
+                                this.state.filter==="finished"?<button className="destroy tool" onClick={this.deleteTask.bind(this,v)} title="delete"></button>:<button className=" tool finish" onClick={this.finishTask.bind(this,v)} title="finish"></button>
+                            }
+                            
+                            </div>
+                        </li>
+        });
+        const avaliableCnt = this.state.todo.reduce((p, v, i) => {
+            if (v.state !== "finished")
+                return p + 1;
+            else
+                return p;
+        }, 0);
+        console.log("a", avaliableCnt)
+        console.log(list.length)
         return <section id="todoapp">
                 <header id="header" >
                 <input id="new-todo" placeholder="What needs to be done?" value={this.state.message}   onChange={this.handleChange} onKeyPress={this.keyHandle}/>
                 </header>
                 <section id="main"><input id="toggle-all" type="checkbox"/>           
                     <ul id="todo-list">
-                        {this.state.todo.map((v,i)=>{
-                          return <li key={i} className={v.state}>
-                            <div className="view"><input className="toggle" type="checkbox" onChange={this.toggleComplete.bind(this,v)}/>
-                            <label>{v.content} in {v.process}</label>                            
-                            <button className="top tool" onClick={this.taskTop.bind(this,v.id)}></button>
-                            <button className="destroy tool" onClick={this.taskDelete.bind(this,v.id)}></button>
-                            
-                            </div>
-                        </li> 
-                        })}
+                        {list}
                     </ul>
                 </section>
                 <footer id="footer" >
                     <span id="todo-count" >
-                    <strong >{this.state.todo.length}</strong>
-                    <span > item left</span>
+                    <strong >{avaliableCnt}</strong>
+                    <span > task{list.length&&'s'||''} left</span>
                     </span>
                     <ul id="filters" >
                         <li >
-                            <a href="#" className="selected" >All</a>
+                            <a className={this.state.filter==="avaliable"&&"selected"}  onClick={this.setFilter.bind(this,"avaliable")}>Avaliable</a>
                         </li>
                         <li >
-                            <a href="#Active" className="" >Active</a>
+                            <a className={this.state.filter==="active"&&"selected"}  onClick={this.setFilter.bind(this,"active")}>Active</a>
                         </li>
-                        <li >
-                            <a href="#Completed" className="" >Completed</a>
+                        <li >                           
+                            <a className={this.state.filter==="finished"&&"selected"}  onClick={this.setFilter.bind(this,"finished")}>Finished</a>
                         </li>
                     </ul>
+                    {this.state.filter==="finished"&&
+                    <button id="clear-completed" onClick={this.clearTask}><span>Clear finished (</span><span>{list.length}</span><span>)</span></button>}
                 </footer>
             </section>;
 

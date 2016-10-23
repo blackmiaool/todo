@@ -34,7 +34,7 @@ export default {
             data
         } = await resp.json();
         if (!data || !data.todo) throw new Error('Failed to load the news feed.');
-        console.log(data);
+//        console.log(data);
         return {
             title: 'React Starter Kit',
             component: <Home todo={data.todo} />,

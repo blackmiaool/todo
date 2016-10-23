@@ -1,5 +1,4 @@
 {
-  "private": true,
   "engines": {
     "node": ">=5.0 <7",
     "npm": ">=3.3 <4"
