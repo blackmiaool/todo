@@ -31,23 +31,7 @@ import {
 /**
  * Sign in with Facebook.
  */
-try {
-    async function create() {
-        const ret=await User.create({
-            id: 1,
-            email: "blackmiaoolblackmiaoo3l@qq.com",
-            todos: [],
-            logins: [{
-                name: "traveller",
-                key: "1"
-            }, ],
-        });
-        console.log(ret)
-    };
-    create();
-} catch (e) {
-    console.log("!!!!!!!!!!!!!!!!!!!",e);
-}
+
 console.log("start!!!");
 
 passport.use(new FacebookStrategy({
@@ -90,6 +74,7 @@ passport.use(new FacebookStrategy({
                         gender: profile._json.gender,
                         picture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
                     },
+                    todos:[],
                 }, {
                     include: [{
                         model: UserLogin,

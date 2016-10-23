@@ -16,15 +16,31 @@ export default {
     path: '/',
 
     async action() {
+        const userInfoResp = await fetch('/graphql', {
+            method: 'post',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: '{me{email}}',
+            }),
+            credentials: 'include',
+        });
+        let userInfo=(await userInfoResp.json()).data;
+        if (!userInfo || !userInfo.me){
+            userInfo={
+                id:1,
+            }
+        }else{
+            userInfo=userInfo.me;
+        }
         const resp = await fetch('/graphql', {
             method: 'post',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            //      body: JSON.stringify({
-            //        query: '{news{title,link,contentSnippet}}',
-            //      }),
             body: JSON.stringify({
                 query: '{todo{content,state,process,id}}',
             }),
@@ -37,7 +53,7 @@ export default {
 //        console.log(data);
         return {
             title: 'React Starter Kit',
-            component: <Home todo={data.todo} />,
+            component: <Home todo={data.todo} email={userInfo.email}/>,
         };
     },
 

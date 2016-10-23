@@ -15,11 +15,11 @@ import Feedback from '../Feedback';
 import Footer from '../Footer';
 import Body from '../Body';
 
-function Layout({ children,todo }) {
+function Layout({ children,todo,email }) {
   return (
     <div>
-      <Header />
-      <Body todo={todo}/>
+      <Header email={email}/>
+      <Body todo={todo} />
       {React.Children.only(children)}
     </div>
   );

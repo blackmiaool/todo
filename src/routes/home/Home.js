@@ -12,9 +12,9 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Layout from '../../components/Layout';
 import s from './Home.css';
 
-function Home({ todo }) {
+function Home({ todo,email }) {
   return (
-    <Layout  todo={todo}>
+    <Layout  todo={todo} email={email}>
     <div></div>
     </Layout>
   );

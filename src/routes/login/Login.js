@@ -13,6 +13,7 @@ import Layout from '../../components/Layout';
 import s from './Login.css';
 
 function Login({ title }) {
+    return <div>login failed</div>;
   return (
     <Layout>
       <div className={s.root}>

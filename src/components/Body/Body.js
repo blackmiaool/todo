@@ -37,6 +37,12 @@ async function set(id, field, value) {
     }
     send();
 }
+async function getUserInfo(id, field, value) {
+    const send = async() => {
+        
+    }
+    send();
+}
 
 
 @withStyles(s)
@@ -56,8 +62,6 @@ class Body extends Component {
         });
     }
     keyHandle = (event) => {
-        console.log(event.key);
-        console.log(arguments, event.key, event.ctrlKey);
         if (event.key === "Enter") {
             console.log("send");
             const send = async() => {
@@ -131,7 +135,6 @@ class Body extends Component {
         send();
     }
     toggleActive = (task) => {
-        console.log(task)
         let state;
         switch (task.state) {
         case "pending":
@@ -148,7 +151,6 @@ class Body extends Component {
 
     }
     finishTask = (task) => {
-        console.log(task)
         if (task.state !== "finished") {
             set.call(this, task.id, "state", "finished");
         }
@@ -160,7 +162,6 @@ class Body extends Component {
         });
     }
     filterState = (state) => {
-        console.log(state, this.state.filter)
         if (this.state.filter === "avaliable") {
             if (state === "finished") {
                 return false;
@@ -221,8 +222,6 @@ class Body extends Component {
             else
                 return p;
         }, 0);
-        console.log("a", avaliableCnt)
-        console.log(list.length)
         return <section id="todoapp">
                 <header id="header" >
                 <input id="new-todo" placeholder="What needs to be done?" value={this.state.message}   onChange={this.handleChange} onKeyPress={this.keyHandle}/>

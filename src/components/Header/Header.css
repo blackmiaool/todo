@@ -25,7 +25,7 @@
 .brandTxt {
     margin-left: 10px;
 }
-.login{
+.login,.userName{
     color: steelblue;
     position: absolute;
     left: 10px;

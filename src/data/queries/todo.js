@@ -47,18 +47,20 @@ async function clear(user) {
 const todo = {
     type: new List(TodoType),
     async resolve(request) {
+    console.log("cookie",request.request.cookies)
         const body = request.request.body;
         const {
             action,
             content,
             id
         } = body;
-        let user = request.user;
+        let user = request.request.user;
         if (!user) {
             user = {
                 id: 1
             }
         }
+
         if (action) {
             switch (action) {
             case "add":
