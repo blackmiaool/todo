@@ -28,7 +28,7 @@ async function getList(user) {
         where: {
             id: user.id,
         },
-    })
+    });    
     return userInfo.todos.reverse();
 }
 async function getTask(id) {
@@ -36,15 +36,13 @@ async function getTask(id) {
     return task;
 }
 async function clear(user) {
-    const list = await getList(user);
-    list.forEach(async (li) => {
-        const v=li.get({
-            plain: true
-        });
-        if(v.state==="finished"){
-            await li.destroy();
-        }
-    });
+    await Todo.destroy({        
+        where: {
+            userId: user.id,
+            state:"finished",
+        },
+    });  
+    
 }
 const todo = {
     type: new List(TodoType),
@@ -124,6 +122,7 @@ const todo = {
         }
 
         const list = await getList(user);
+
         return list;
 
 
