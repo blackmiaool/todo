@@ -1,5 +1,6 @@
 @import (reference) "../prefix.less";
 @import (reference) "../mixin.less";
+@li-height:30px;
 button {
     margin: 0;
     padding: 0;
@@ -20,6 +21,7 @@ body {
     line-height: 1.2em;
     color: #4d4d4d;
     width: 550px;
+    max-width: 100%;
     margin: 0 auto;
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
@@ -217,15 +219,16 @@ label[for='toggle-all'] {
         -ms-appearance: none;
         -o-appearance: none;
         appearance: none;
-        &:after {
-            content: '✔';
-            /* 40 + a couple of pixels visual adjustment */
-            line-height: 43px;
-            font-size: 20px;
+        &:before {
+            content: '✓';
             color: #d9d9d9;
+            line-height: @li-height + 3px;
+            font-size: 20px;
+            display: inline-block;            
+            
             text-shadow: 0 -1px 0 #bfbfbf;
         }
-        &:checked:after {
+        &:checked:before {
             color: #85ada7;
             text-shadow: 0 1px 0 #669991;
             bottom: 1px;
@@ -245,7 +248,7 @@ label[for='toggle-all'] {
     label {
         white-space: pre;
         word-break: break-word;
-        padding: 15px 60px 15px 15px;
+        padding: 5px 60px 5px 15px;
         margin-left: 45px;
         display: block;
         line-height: 1.2;
@@ -257,8 +260,8 @@ label[for='toggle-all'] {
         position: absolute;
         top: 0;
         bottom: 0;
-        width: 30px;
-        height: 40px;
+        width: @li-height/3*2;
+        height: @li-height;
         margin: auto 0;
         font-size: 22px;
         color: #a88a8a;
@@ -286,7 +289,7 @@ label[for='toggle-all'] {
         }
     }
     .top {
-        right: 50px;
+        right: 10px + @li-height;
         &:after {
             content: '⌅';
             //            ⇑↥ ↟⌅⇭ ⇮ ⇯ 
@@ -299,23 +302,24 @@ label[for='toggle-all'] {
     padding: 0 15px;
     position: absolute;
     right: 0;
-    bottom: -31px;
+//    bottom: -31px;
+    top:-25px;
     left: 0;
     height: 20px;
     z-index: 1;
     text-align: center;
 }
 
-#footer:before {
-    content: '';
-    position: absolute;
-    right: 0;
-    bottom: 31px;
-    left: 0;
-    height: 50px;
-    z-index: -1;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), 0 6px 0 -3px rgba(255, 255, 255, 0.8), 0 7px 1px -3px rgba(0, 0, 0, 0.3), 0 43px 0 -6px rgba(255, 255, 255, 0.8), 0 44px 2px -6px rgba(0, 0, 0, 0.2);
-}
+//#footer:before {
+//    content: '';
+//    position: absolute;
+//    right: 0;
+//    bottom: 31px;
+//    left: 0;
+//    height: 50px;
+//    z-index: -1;
+//    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), 0 6px 0 -3px rgba(255, 255, 255, 0.8), 0 7px 1px -3px rgba(0, 0, 0, 0.3), 0 43px 0 -6px rgba(255, 255, 255, 0.8), 0 44px 2px -6px rgba(0, 0, 0, 0.2);
+//}
 
 #todo-count {
     float: left;
@@ -390,7 +394,7 @@ label[for='toggle-all'] {
         background: none;
     }
     #todo-list li .toggle {
-        height: 40px;
+        height: @li-height;
     }
     #toggle-all {
         top: -56px;

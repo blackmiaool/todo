@@ -18,7 +18,7 @@ import clean from './clean';
 import copy from './copy';
 
 const DEBUG = !process.argv.includes('--release');
-
+process.env['PORT'] = 10003;
 /**
  * Launches a development web server with "live reload" functionality -
  * synchronizing URLs, interactions and code changes across multiple devices.

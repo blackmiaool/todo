@@ -33,7 +33,7 @@ const GLOBALS = {
 // Common configuration chunk to be used for both
 // client-side (client.js) and server-side (server.js) bundles
 // -----------------------------------------------------------------------------
-
+const sourceMap=true;
 const config = {
   context: path.resolve(__dirname, '../src'),
 
@@ -78,7 +78,7 @@ const config = {
         loaders: [
           'isomorphic-style-loader',
           `css-loader?${JSON.stringify({
-            sourceMap: DEBUG,
+            sourceMap,
             // CSS Modules https://github.com/css-modules/css-modules
             modules: true,
             localIdentName: DEBUG ? '[name]_[local]_[hash:base64:3]' : '[hash:base64:4]',
@@ -92,7 +92,7 @@ const config = {
         test: /\.scss$/,
         loaders: [
           'isomorphic-style-loader',
-          `css-loader?${JSON.stringify({ sourceMap: DEBUG, minimize: !DEBUG })}`,
+          `css-loader?${JSON.stringify({ sourceMap, minimize: !DEBUG })}`,
           'postcss-loader?pack=sass',
           'sass-loader',
         ],
@@ -124,7 +124,7 @@ const config = {
         test: /\.less$/,
         loaders: [
           'isomorphic-style-loader',
-          `css-loader?${JSON.stringify({sourceMap: DEBUG, minimize: !DEBUG })}`,
+          `css-loader?${JSON.stringify({sourceMap, minimize: !DEBUG })}`,
           'postcss-loader?pack=sass',
           'less-loader',
         ],
@@ -262,7 +262,7 @@ const clientConfig = extend(true, {}, config, {
 
   // Choose a developer tool to enhance debugging
   // http://webpack.github.io/docs/configuration.html#devtool
-  devtool: DEBUG ? 'source-map' : false,
+  devtool: sourceMap ? 'source-map' : false,
 });
 
 //

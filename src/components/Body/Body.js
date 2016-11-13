@@ -5,6 +5,8 @@ import React, {
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Body.less';
 import fetch from '../../core/fetch';
+import ContentEditable from "react-contenteditable";
+
 
 const headers = {
     Accept: 'application/json',
@@ -52,7 +54,8 @@ class Body extends Component {
         this.state = {
             message: '',
             todo: JSON.parse(JSON.stringify(props.todo)),
-            filter: "avaliable"
+            filter: "avaliable",
+            needUpdate:false
         };
     }
 
@@ -63,7 +66,9 @@ class Body extends Component {
     }
     keyHandle = (event) => {
         if (event.key === "Enter") {
-            console.log("send");
+            if(!this.state.message){
+                return;
+            }
             const send = async() => {
                 const resp = await fetch('/graphql', {
                     method,
@@ -193,6 +198,22 @@ class Body extends Component {
         }
         send();
     }
+    updateContent =(task)=>{
+        return (e)=>{
+            const content=e.target.value
+            task.content=content;
+            this.state.needUpdate=true;
+        }
+    }
+    syncContent=(task)=>{
+        return ()=>{
+            if(!this.state.needUpdate){
+                this.state.needUpdate=false;
+                return;
+            }                            
+            set.call(this, task.id, "content", task.content);
+        }
+    }
     render() {
         const listData = this.state.todo.filter((v, i) => {
             if (!this.filterState(v.state)) {
@@ -207,7 +228,11 @@ class Body extends Component {
 
             return <li key={i} className={v.state}>
                             <div className="view"><input className="toggle" type="checkbox" onChange={this.toggleActive.bind(this,v)} checked={v.state==="active"} title={v.state==="active"?"active":"inactive"}/>
-                            <label>{v.content} in {v.process}</label>                            
+                          
+                            <ContentEditable html={v.content} tagName="label"
+                            onChange={this.updateContent(v)}
+                            onBlur={this.syncContent(v)}
+                            />
                             <button className="top tool" onClick={this.topTask.bind(this,v)} title="top"></button>
                             {
                                 this.state.filter==="finished"?<button className="destroy tool" onClick={this.deleteTask.bind(this,v)} title="delete"></button>:<button className=" tool finish" onClick={this.finishTask.bind(this,v)} title="finish"></button>
@@ -223,15 +248,7 @@ class Body extends Component {
                 return p;
         }, 0);
         return <section id="todoapp">
-                <header id="header" >
-                <input id="new-todo" placeholder="What needs to be done?" value={this.state.message}   onChange={this.handleChange} onKeyPress={this.keyHandle}/>
-                </header>
-                <section id="main"><input id="toggle-all" type="checkbox"/>           
-                    <ul id="todo-list">
-                        {list}
-                    </ul>
-                </section>
-                <footer id="footer" >
+               <footer id="footer" >
                     <span id="todo-count" >
                     <strong >{avaliableCnt}</strong>
                     <span > task{list.length&&'s'||''} left</span>
@@ -250,6 +267,15 @@ class Body extends Component {
                     {this.state.filter==="finished"&&
                     <button id="clear-completed" onClick={this.clearTask}><span>Clear finished (</span><span>{list.length}</span><span>)</span></button>}
                 </footer>
+                <header id="header" >
+                <input id="new-todo" placeholder="What needs to be done?" value={this.state.message}   onChange={this.handleChange} onKeyPress={this.keyHandle}/>
+                </header>
+                <section id="main"><input id="toggle-all" type="checkbox"/>           
+                    <ul id="todo-list">
+                        {list}
+                    </ul>
+                </section>
+                
             </section>;
 
     }

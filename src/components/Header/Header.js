@@ -12,15 +12,12 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Header.css';
 import Link from '../Link';
 import Navigation from '../Navigation';
-import logoUrl from './logo-small.png';
+//import logoUrl from './logo-small.png';
 
 function Header({email}) {
   return (
     <div className={s.root}>
       <div className={s.container}>
-        <div className={s.banner}>
-          <h1 className={s.bannerTitle}>ToDo</h1>
-        </div>
         {email ? <span className={s.userName}>{"Hi,"+email}</span> : <a href="/login/facebook" className={s.login}>Login</a>}                
       </div>
     </div>

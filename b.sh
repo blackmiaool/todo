@@ -1,2 +1,3 @@
 npm run build
-node build/server.js
+cp -r build/ /mnt/raspberry/todo
+
